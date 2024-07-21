@@ -1,13 +1,25 @@
 import { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { userContext } from "../context/Context";
 
+import {  toast } from 'react-toastify';
+
 const Details = () => {
+  const navigate=useNavigate()
   const { id } = useParams();
 //   console.log(id);
   const [recipy, setRecipy] = useContext(userContext);
 
   const dish = recipy.find((r)=>r.id===id);
+  
+  const deleteHandler=()=>{
+    const dishIndex = recipy.findIndex((r)=>r.id===id);
+    console.log(dishIndex);
+    recipy.splice(dishIndex, 1);
+    toast.success("Dish deleted")
+    navigate("/recipies")
+
+  }
   
 //   console.log(dish);
     // const dish = {
@@ -20,7 +32,8 @@ const Details = () => {
     //   instructions: `Bring 1 cup of the broth to a boil. Add spinach and cook until softened but still bright green. Remove spinach with a slotted spoon and set aside. Add remaining broth to pot. Bring to a boil. Meanwhile, beat egg lightly with a fork. Beat in 1/4 cup of cheese. When broth boils pour in egg mixture, stirring constantly for a few seconds until it cooks into "rags." Add reserved spinach, salt and pepper. Serve immediately, passing remaining cheese. NOTES: Someone asked for this recipe a while back. I believe this soup, known as "Stracciatella" is synonymous with Italian Wedding Soup, however, I seem to remember from I-don't-know-where that Italian Wedding Soup is the same as this but with the addition of tiny meatballs.`,
     // };
   return (
-    <div className="w-[80%] m-auto p-5">
+   <>
+   {dish&&<div className="w-[80%] m-auto p-5">
       <Link to="/recipes" className="text-3xl ri-arrow-left-line"></Link>
       <div className="details w-full flex h-[75vh] mt-3">
         <div className="dets w-[50%] p-[3%] shadow">
@@ -34,7 +47,9 @@ const Details = () => {
             >
               Update
             </Link>
-            <Link className="text-red-400 border-red-400 border py-2 px-5">
+            <Link 
+            onClick={deleteHandler}
+            className="text-red-400 border-red-400 border py-2 px-5">
               Delete
             </Link>
           </div>
@@ -62,7 +77,8 @@ const Details = () => {
           </ul>
         </div>
       </div>
-    </div>
+    </div>}
+   </>
   );
 };
 
